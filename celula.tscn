@@ -1,11 +1,13 @@
 [gd_scene format=3]
 
 [ext_resource type="Texture2D" path="res://assets/celula.png" id="1"]
+[ext_resource type="Script" path="res://celula.gd" id="2"]
 
 [sub_resource type="CircleShape2D" id="Forma"]
 radius = 12
 
 [node name="Celula" type="Area2D" groups=["celulas"]]
+script = ExtResource("2")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1")
