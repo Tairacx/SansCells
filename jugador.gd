@@ -1,6 +1,8 @@
 extends CharacterBody2D
 # Movimiento resuelto: correr, gravedad y salto. El Taller 3 se escribe abajo.
 
+signal golpeo(zombi)
+
 @export var speed = 220.0       # px/s
 @export var gravedad = 1200.0   # px/s²
 @export var salto = 560.0       # px/s hacia arriba
@@ -16,14 +18,24 @@ var rodando = false
 var mirando = 1
 var inicio = Vector2.ZERO
 var muriendo = false
+var atacando = false
+var golpeados = {}
 
 
 func _ready():
 	inicio = position
+	golpe.monitoring = false
+	golpe.area_entered.connect(_on_golpe_area_entered)
 
 
 func _physics_process(delta):
 	if muriendo:
+		return
+	if atacando:
+		velocity.x = 0.0
+		if not is_on_floor():
+			velocity.y += gravedad * delta
+		move_and_slide()
 		return
 	if rodando:
 		velocity.x = velocidad_rodar * mirando
@@ -77,21 +89,42 @@ func rodar():
 	rodando = false
 	
 func atacar():
-	if muriendo:
+	if muriendo or atacando or rodando:
 		return
-	var hueso = $Golpe/Hueso
-	hueso.visible = true
-	hueso.rotation = 0.0
+	atacando = true
+	golpeados.clear()
+	sprite.speed_scale = 1
+	sprite.play("atacar")
 	espada.play()
-	var tween = create_tween()
-	tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(hueso, "rotation", -0.7, 0.08)   # amague hacia atrás
-	tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.tween_property(hueso, "rotation", 1.1, 0.12)    # golpe hacia adelante
-	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tween.tween_property(hueso, "rotation", 0.0, 0.10)    # regresa
-	await espada.finished
-	hueso.visible = false
+	await get_tree().create_timer(0.18).timeout
+	if not atacando or muriendo:
+		return
+	golpe.monitoring = true
+	await get_tree().physics_frame
+	if not atacando or muriendo:
+		golpe.monitoring = false
+		return
+	for area in golpe.get_overlapping_areas():
+		_golpear(area)
+	await get_tree().create_timer(0.14).timeout
+	golpe.monitoring = false
+	await sprite.animation_finished
+	atacando = false
+
+
+func _on_golpe_area_entered(area):
+	_golpear(area)
+
+
+func _golpear(area):
+	if not atacando or muriendo:
+		return
+	if not area.is_in_group("enemigos"):
+		return
+	if golpeados.has(area):
+		return
+	golpeados[area] = true
+	golpeo.emit(area)
 
 
 func morir(reaparecer := true):
@@ -99,8 +132,10 @@ func morir(reaparecer := true):
 		return
 	muriendo = true
 	rodando = false
+	atacando = false
 	velocity = Vector2.ZERO
-	$Golpe/Hueso.visible = false
+	golpe.set_deferred("monitoring", false)
+	golpeados.clear()
 	sprite.speed_scale = 1
 	sprite.play("morir")
 	sonido_muerte.play()

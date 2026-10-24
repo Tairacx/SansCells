@@ -35,6 +35,7 @@ func _ready():
 		item.recogido.connect(_on_recogido)
 	for enemigo in get_tree().get_nodes_in_group("enemigos"):
 		enemigo.toco_al_jugador.connect(_on_enemigo_toco)
+	jugador.golpeo.connect(_on_jugador_golpeo)
 	$TimerPoder.timeout.connect(_on_timer_poder_timeout)
 	$HUD/Vidas.text = "Vidas: %d" % vidas
 
@@ -77,6 +78,12 @@ func _on_enemigo_toco(enemigo):
 	$HUD/Vidas.text = "Vidas: %d" % vidas
 
 
+func _on_jugador_golpeo(zombi):
+	if juego_terminado:
+		return
+	zombi.recibir_golpe(jugador.mirando)
+
+
 func construir():
 	construir_bloques(MAPA)
 	for fila in MAPA.size():
@@ -91,5 +98,7 @@ func construir():
 					escena = zombi_escena
 			if escena:
 				var nodo = escena.instantiate()
+				if escena == zombi_escena:
+					nodo.agresivo = true
 				nodo.position = Vector2(col + 0.5, fila + 0.5) * CELDA
 				$Mapa.add_child(nodo)

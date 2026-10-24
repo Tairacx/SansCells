@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://b423vww716d4u"]
 
-[ext_resource type="Texture2D" uid="uid://c3pml5q2l5l4d" path="res://assets/hueso.png" id="3_7st5j"]
 [ext_resource type="AudioStream" uid="uid://dl34ks1c1wrtp" path="res://assets/espada.wav" id="3_8o684"]
 [ext_resource type="AudioStream" uid="uid://poqfm7c1y7qm" path="res://assets/rodar.wav" id="4_ukil5"]
 [ext_resource type="Script" uid="uid://7h4ulbxm6yms" path="res://jugador.gd" id="s"]
 [ext_resource type="Texture2D" uid="uid://da1s4j150f6jn" path="res://assets/sans_hoja.png" id="t0"]
 [ext_resource type="Texture2D" path="res://assets/sans_morir.png" id="t1"]
+[ext_resource type="Texture2D" path="res://assets/sans_atacar.png" id="t2"]
 [ext_resource type="AudioStream" path="res://assets/muerte.wav" id="5_muerte"]
 
 [sub_resource type="AtlasTexture" id="A0_6"]
@@ -83,6 +83,26 @@ region = Rect2(256, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="M0_5"]
 atlas = ExtResource("t1")
 region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="G0_0"]
+atlas = ExtResource("t2")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="G0_1"]
+atlas = ExtResource("t2")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="G0_2"]
+atlas = ExtResource("t2")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="G0_3"]
+atlas = ExtResource("t2")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="G0_4"]
+atlas = ExtResource("t2")
+region = Rect2(256, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_A0"]
 animations = [{
@@ -172,6 +192,26 @@ animations = [{
 "loop": 0,
 "name": &"morir",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("G0_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("G0_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("G0_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("G0_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("G0_4")
+}],
+"loop": 0,
+"name": &"atacar",
+"speed": 12.0
 }]
 
 [sub_resource type="RectangleShape2D" id="Forma"]
@@ -194,6 +234,7 @@ shape = SubResource("Forma")
 
 [node name="Golpe" type="Area2D" parent="." unique_id=991662673]
 position = Vector2(36, 0)
+monitoring = false
 
 [node name="ColorRect" type="ColorRect" parent="Golpe" unique_id=931523140]
 visible = false
@@ -205,11 +246,6 @@ color = Color(1, 0.3, 0.3, 0.35)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Golpe" unique_id=1740966654]
 shape = SubResource("FormaGolpe")
-
-[node name="Hueso" type="Sprite2D" parent="Golpe" unique_id=583052763]
-visible = false
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_7st5j")
 
 [node name="Espada" type="AudioStreamPlayer2D" parent="." unique_id=1705395891]
 stream = ExtResource("3_8o684")
