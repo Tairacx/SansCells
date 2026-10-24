@@ -10,6 +10,7 @@ signal golpeo(zombi)
 
 @onready var sprite = $AnimatedSprite2D
 @onready var golpe = $Golpe     # el área que golpea con la espada
+@onready var hueso = $Golpe/Hueso
 @onready var espada = $Espada
 @onready var sonido_rodar = $Rodar
 @onready var sonido_muerte = $Muerte
@@ -25,7 +26,8 @@ var golpeados = {}
 func _ready():
 	inicio = position
 	golpe.monitoring = false
-	golpe.area_entered.connect(_on_golpe_area_entered)
+	hueso.visible = false
+	golpe.body_entered.connect(_on_golpe_body_entered)
 
 
 func _physics_process(delta):
@@ -78,7 +80,8 @@ func orientar():
 	if eje != 0:
 		mirando = sign(eje)
 		sprite.flip_h = mirando == -1
-		golpe.position.x = 36 * mirando
+		golpe.position.x = 22 * mirando
+		hueso.flip_h = mirando == -1
 
 func rodar():
 	rodando = true
@@ -93,38 +96,43 @@ func atacar():
 		return
 	atacando = true
 	golpeados.clear()
+	hueso.visible = true
 	sprite.speed_scale = 1
 	sprite.play("atacar")
 	espada.play()
-	await get_tree().create_timer(0.18).timeout
+	await get_tree().create_timer(0.10).timeout
 	if not atacando or muriendo:
+		hueso.visible = false
 		return
 	golpe.monitoring = true
 	await get_tree().physics_frame
 	if not atacando or muriendo:
 		golpe.monitoring = false
+		hueso.visible = false
 		return
-	for area in golpe.get_overlapping_areas():
-		_golpear(area)
-	await get_tree().create_timer(0.14).timeout
+	for body in golpe.get_overlapping_bodies():
+		_golpear(body)
+	await get_tree().create_timer(0.22).timeout
 	golpe.monitoring = false
-	await sprite.animation_finished
+	if sprite.is_playing():
+		await sprite.animation_finished
+	hueso.visible = false
 	atacando = false
 
 
-func _on_golpe_area_entered(area):
-	_golpear(area)
+func _on_golpe_body_entered(body):
+	_golpear(body)
 
 
-func _golpear(area):
+func _golpear(body):
 	if not atacando or muriendo:
 		return
-	if not area.is_in_group("enemigos"):
+	if not body.is_in_group("enemigos"):
 		return
-	if golpeados.has(area):
+	if golpeados.has(body):
 		return
-	golpeados[area] = true
-	golpeo.emit(area)
+	golpeados[body] = true
+	golpeo.emit(body)
 
 
 func morir(reaparecer := true):
@@ -135,6 +143,7 @@ func morir(reaparecer := true):
 	atacando = false
 	velocity = Vector2.ZERO
 	golpe.set_deferred("monitoring", false)
+	hueso.visible = false
 	golpeados.clear()
 	sprite.speed_scale = 1
 	sprite.play("morir")

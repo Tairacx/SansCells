@@ -5,7 +5,8 @@
 [ext_resource type="Script" uid="uid://7h4ulbxm6yms" path="res://jugador.gd" id="s"]
 [ext_resource type="Texture2D" uid="uid://da1s4j150f6jn" path="res://assets/sans_hoja.png" id="t0"]
 [ext_resource type="Texture2D" path="res://assets/sans_morir.png" id="t1"]
-[ext_resource type="Texture2D" path="res://assets/sans_atacar.png" id="t2"]
+[ext_resource type="Texture2D" path="res://assets/sans_atacar_hueso.png" id="t2"]
+[ext_resource type="Texture2D" path="res://assets/hueso_golpe.png" id="t3_hueso"]
 [ext_resource type="AudioStream" path="res://assets/muerte.wav" id="5_muerte"]
 
 [sub_resource type="AtlasTexture" id="A0_6"]
@@ -211,14 +212,14 @@ animations = [{
 }],
 "loop": 0,
 "name": &"atacar",
-"speed": 12.0
+"speed": 15.0
 }]
 
 [sub_resource type="RectangleShape2D" id="Forma"]
 size = Vector2(24, 56)
 
 [sub_resource type="RectangleShape2D" id="FormaGolpe"]
-size = Vector2(28, 28)
+size = Vector2(44, 32)
 
 [node name="Prisionero" type="CharacterBody2D" unique_id=60614801 groups=["jugador"]]
 script = ExtResource("s")
@@ -233,19 +234,27 @@ shape = SubResource("Forma")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=929122347]
 
 [node name="Golpe" type="Area2D" parent="." unique_id=991662673]
-position = Vector2(36, 0)
+position = Vector2(22, 6)
+collision_layer = 0
+collision_mask = 1
 monitoring = false
 
 [node name="ColorRect" type="ColorRect" parent="Golpe" unique_id=931523140]
 visible = false
-offset_left = -14.0
-offset_top = -14.0
-offset_right = 14.0
-offset_bottom = 14.0
+offset_left = -22.0
+offset_top = -16.0
+offset_right = 22.0
+offset_bottom = 16.0
 color = Color(1, 0.3, 0.3, 0.35)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Golpe" unique_id=1740966654]
 shape = SubResource("FormaGolpe")
+
+[node name="Hueso" type="Sprite2D" parent="Golpe"]
+texture = ExtResource("t3_hueso")
+texture_filter = 1
+visible = false
+z_index = 10
 
 [node name="Espada" type="AudioStreamPlayer2D" parent="." unique_id=1705395891]
 stream = ExtResource("3_8o684")

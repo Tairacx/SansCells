@@ -100,5 +100,10 @@ func construir():
 				var nodo = escena.instantiate()
 				if escena == zombi_escena:
 					nodo.agresivo = true
-				nodo.position = Vector2(col + 0.5, fila + 0.5) * CELDA
+					var fila_piso = fila
+					while fila_piso + 1 < MAPA.size() and MAPA[fila_piso + 1][col] != "#":
+						fila_piso += 1
+					nodo.position = Vector2((col + 0.5) * CELDA, (fila_piso + 1) * CELDA - 28.0)
+				else:
+					nodo.position = Vector2(col + 0.5, fila + 0.5) * CELDA
 				$Mapa.add_child(nodo)
