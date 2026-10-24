@@ -9,6 +9,7 @@ radius = 16
 [node name="Pergamino" type="Area2D" groups=["celulas"]]
 script = ExtResource("2")
 valor = 10
+da_poder = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1")
