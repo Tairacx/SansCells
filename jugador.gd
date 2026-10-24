@@ -10,11 +10,21 @@ extends CharacterBody2D
 @onready var golpe = $Golpe     # el área que golpea con la espada
 @onready var espada = $Espada
 @onready var sonido_rodar = $Rodar
+@onready var sonido_muerte = $Muerte
 
 var rodando = false
 var mirando = 1
+var inicio = Vector2.ZERO
+var muriendo = false
+
+
+func _ready():
+	inicio = position
+
 
 func _physics_process(delta):
+	if muriendo:
+		return
 	if rodando:
 		velocity.x = velocidad_rodar * mirando
 		if not is_on_floor():
@@ -67,6 +77,8 @@ func rodar():
 	rodando = false
 	
 func atacar():
+	if muriendo:
+		return
 	var hueso = $Golpe/Hueso
 	hueso.visible = true
 	hueso.rotation = 0.0
@@ -80,3 +92,20 @@ func atacar():
 	tween.tween_property(hueso, "rotation", 0.0, 0.10)    # regresa
 	await espada.finished
 	hueso.visible = false
+
+
+func morir(reaparecer := true):
+	if muriendo:
+		return
+	muriendo = true
+	rodando = false
+	velocity = Vector2.ZERO
+	$Golpe/Hueso.visible = false
+	sprite.speed_scale = 1
+	sprite.play("morir")
+	sonido_muerte.play()
+	await sprite.animation_finished
+	if reaparecer:
+		position = inicio
+		sprite.play("quieto")
+		muriendo = false

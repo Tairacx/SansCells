@@ -5,6 +5,8 @@
 [ext_resource type="AudioStream" uid="uid://poqfm7c1y7qm" path="res://assets/rodar.wav" id="4_ukil5"]
 [ext_resource type="Script" uid="uid://7h4ulbxm6yms" path="res://jugador.gd" id="s"]
 [ext_resource type="Texture2D" uid="uid://da1s4j150f6jn" path="res://assets/sans_hoja.png" id="t0"]
+[ext_resource type="Texture2D" path="res://assets/sans_morir.png" id="t1"]
+[ext_resource type="AudioStream" path="res://assets/muerte.wav" id="5_muerte"]
 
 [sub_resource type="AtlasTexture" id="A0_6"]
 atlas = ExtResource("t0")
@@ -56,6 +58,30 @@ region = Rect2(128, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="A0_5"]
 atlas = ExtResource("t0")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="M0_0"]
+atlas = ExtResource("t1")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="M0_1"]
+atlas = ExtResource("t1")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="M0_2"]
+atlas = ExtResource("t1")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="M0_3"]
+atlas = ExtResource("t1")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="M0_4"]
+atlas = ExtResource("t1")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="M0_5"]
+atlas = ExtResource("t1")
 region = Rect2(320, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_A0"]
@@ -123,6 +149,29 @@ animations = [{
 "loop": 0,
 "name": &"saltar",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("M0_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("M0_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("M0_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("M0_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("M0_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("M0_5")
+}],
+"loop": 0,
+"name": &"morir",
+"speed": 10.0
 }]
 
 [sub_resource type="RectangleShape2D" id="Forma"]
@@ -167,3 +216,6 @@ stream = ExtResource("3_8o684")
 
 [node name="Rodar" type="AudioStreamPlayer2D" parent="." unique_id=1301113588]
 stream = ExtResource("4_ukil5")
+
+[node name="Muerte" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_muerte")

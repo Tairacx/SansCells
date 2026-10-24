@@ -23,6 +23,14 @@ offset_bottom = 48.0
 theme_override_font_sizes/font_size = 28
 text = "Puntaje: 0"
 
+[node name="Vidas" type="Label" parent="HUD"]
+offset_left = 300.0
+offset_top = 8.0
+offset_right = 600.0
+offset_bottom = 48.0
+theme_override_font_sizes/font_size = 28
+text = "Vidas: 3"
+
 [node name="Mensaje" type="Label" parent="HUD"]
 offset_left = 16.0
 offset_top = 52.0
@@ -47,3 +55,7 @@ repeat_size = Vector2(1024, 0)
 [node name="Columnas" type="Sprite2D" parent="FondoCerca" unique_id=1856242290]
 position = Vector2(512, 480)
 texture = ExtResource("4_aou4a")
+
+[node name="TimerPoder" type="Timer" parent="."]
+wait_time = 8.0
+one_shot = true
