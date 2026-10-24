@@ -1,0 +1,48 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/murcielago_1.png" id="t0"]
+[ext_resource type="Texture2D" path="res://assets/murcielago_2.png" id="t1"]
+[ext_resource type="Script" path="res://murcielago.gd" id="s"]
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t0")
+},
+{
+"duration": 1.0,
+"texture": ExtResource("t1")
+}],
+"loop": true,
+"name": &"quieto",
+"speed": 8.0
+}]
+
+[sub_resource type="CircleShape2D" id="Forma"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="FormaContacto"]
+radius = 22.0
+
+[node name="Murcielago" type="CharacterBody2D" groups=["enemigos"]]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 0)
+scale = Vector2(1, 1)
+sprite_frames = SubResource("Frames")
+animation = &"quieto"
+autoplay = "quieto"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Forma")
+
+[node name="Contacto" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contacto"]
+shape = SubResource("FormaContacto")

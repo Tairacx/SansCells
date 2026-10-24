@@ -3,3 +3,9 @@ Base del Taller 3 — Dead Cells, para repartir a los estudiantes del equipo.
 Ábranlo con Godot 4.7: Import → elegir project.godot → Import & Edit. La escena principal es
 mundo.tscn (F5). Si ya tienen su propio proyecto con el taller anterior terminado, pueden seguir en el
 suyo: copien la carpeta assets/ y lo que pida la guía.
+
+
+--- Versión fusionada (SansCells + diseño nuevo) ---
+Mecánicas: las de SansCells (ataque, vidas, poder del pergamino, zombis que persiguen y embisten).
+Diseño agregado: mapa de 110x10 con fosos, zona 2 con fondo/bloques rojos (ZONA2_COL en bloques.gd),
+monedas (antes células), zombi y esqueleto con arte nuevo, y un enemigo nuevo: el murciélago (murcielago.gd).

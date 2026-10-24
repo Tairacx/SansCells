@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8evcsqx578x3"
-path="res://.godot/imported/celula.png-0a50c1a1b16b6f13d4e9d3a76231865a.ctex"
+uid="uid://wpmn8lmqy1ak"
+path="res://.godot/imported/murcielago_1.png-eada5becf08478f71c5b2b3b7f95aaf3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/celula.png"
-dest_files=["res://.godot/imported/celula.png-0a50c1a1b16b6f13d4e9d3a76231865a.ctex"]
+source_file="res://assets/murcielago_1.png"
+dest_files=["res://.godot/imported/murcielago_1.png-eada5becf08478f71c5b2b3b7f95aaf3.ctex"]
 
 [params]
 

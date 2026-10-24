@@ -1,37 +1,46 @@
 extends "res://bloques.gd"
 # Base del Taller 4. construir() arma el nivel a partir del MAPA:
-# "#" bloque, "." celula, "o" pergamino, "E" zombi.
+# "#" bloque, "." moneda, "o" pergamino, "E" zombi (zona 1) / esqueleto (zona 2), "B" murcielago.
+# La zona 2 empieza en la columna ZONA2_COL (bloques.gd): cambian el fondo y los enemigos.
 
 const MAPA = [
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"                                        ",
-	"            .            .              ",
-	"      .              o          .       ",
-	"   o                                    ",
-	"#      .    #     E     ##   .   E     #",
-	"#        .  #     .     ##        .    #",
-	"########################################",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"#                                           B                                         B                   B  #",
+	"#           B                   B                                 B           B o               B            #",
+	"#                                       o                                      .#.                           #",
+	"#                        .E.           .#.                 . .          o.     ###                   .E.     #",
+	"#              .        #####         #####                 ###               #####        ##        ###     #",
+	"#   .  . E.   ### ..E ##  ..  . E.  ######### . E ### .   ###  E. ## .E   . ######### ..E ###    .E.#####  o #",
+	"########################################################################  ####################  ##############",
 ]
 
-var celula_escena = preload("res://celula.tscn")
+var moneda_escena = preload("res://moneda.tscn")
 var pergamino_escena = preload("res://pergamino.tscn")
 var zombi_escena = preload("res://zombi.tscn")
+var esqueleto_escena = preload("res://esqueleto.tscn")
+var murcielago_escena = preload("res://murcielago.tscn")
 
 @onready var jugador = $Prisionero
+@onready var fondo_cerca = $FondoCerca
+@onready var fondo_lejano2 = $FondoLejano2
+@onready var fondo_cerca2 = $FondoCerca2
 
 var puntaje = 0
 var modo_poder = false
 var restantes = 0
 var vidas = 3
 var juego_terminado = false
+var mezcla = 0.0            # 0 = fondo de la zona 1, 1 = fondo de la zona 2
+var zona2_alcanzada = false
 
 
 func _ready():
 	construir()
-	restantes = get_tree().get_nodes_in_group("celulas").size()
-	for item in get_tree().get_nodes_in_group("celulas"):
+	configurar_camara()
+	restantes = get_tree().get_nodes_in_group("monedas").size()
+	for item in get_tree().get_nodes_in_group("monedas"):
 		item.recogido.connect(_on_recogido)
 	for enemigo in get_tree().get_nodes_in_group("enemigos"):
 		enemigo.toco_al_jugador.connect(_on_enemigo_toco)
@@ -66,15 +75,19 @@ func _on_enemigo_toco(enemigo):
 		puntaje += 200
 		$HUD/Puntaje.text = "Puntaje: %d" % puntaje
 	else:
-		vidas -= 1
-		if vidas <= 0:
-			vidas = 0
-			juego_terminado = true
-			$HUD/Mensaje.text = "Perdiste"
-			jugador.morir(false)
-			jugador.set_physics_process(false)
-		else:
-			jugador.morir()
+		perder_vida()
+
+
+func perder_vida():
+	vidas -= 1
+	if vidas <= 0:
+		vidas = 0
+		juego_terminado = true
+		$HUD/Mensaje.text = "Perdiste"
+		jugador.morir(false)
+		jugador.set_physics_process(false)
+	else:
+		jugador.morir()
 	$HUD/Vidas.text = "Vidas: %d" % vidas
 
 
@@ -89,16 +102,21 @@ func construir():
 	for fila in MAPA.size():
 		for col in MAPA[fila].length():
 			var escena = null
+			var terrestre = false
 			match MAPA[fila][col]:
 				".":
-					escena = celula_escena
+					escena = moneda_escena
 				"o":
 					escena = pergamino_escena
 				"E":
-					escena = zombi_escena
+					# zona 1: zombis, zona 2: esqueletos
+					escena = zombi_escena if col < ZONA2_COL else esqueleto_escena
+					terrestre = true
+				"B":
+					escena = murcielago_escena
 			if escena:
 				var nodo = escena.instantiate()
-				if escena == zombi_escena:
+				if terrestre:
 					nodo.agresivo = true
 					var fila_piso = fila
 					while fila_piso + 1 < MAPA.size() and MAPA[fila_piso + 1][col] != "#":
@@ -107,3 +125,27 @@ func construir():
 				else:
 					nodo.position = Vector2(col + 0.5, fila + 0.5) * CELDA
 				$Mapa.add_child(nodo)
+
+
+# La cámara no se sale del mapa
+func configurar_camara():
+	var camara = jugador.get_node("Camera2D")
+	camara.limit_left = 0
+	camara.limit_top = 0
+	camara.limit_right = MAPA[0].length() * CELDA
+	camara.limit_bottom = MAPA.size() * CELDA
+
+
+func _process(delta):
+	# Cambio de fondo al entrar a la zona 2
+	var en_zona2 = jugador.global_position.x >= ZONA2_COL * CELDA
+	mezcla = move_toward(mezcla, 1.0 if en_zona2 else 0.0, delta * 1.5)
+	fondo_lejano2.modulate.a = mezcla
+	fondo_cerca2.modulate.a = mezcla
+	fondo_cerca.modulate.a = 1.0 - mezcla
+	if en_zona2 and not zona2_alcanzada:
+		zona2_alcanzada = true
+		jugador.inicio = Vector2((ZONA2_COL + 1.5) * CELDA, 8.5 * CELDA)   # checkpoint
+	# Si cae a un foso pierde una vida (reaparece en el último checkpoint)
+	if jugador.position.y > MAPA.size() * CELDA + 300 and not jugador.muriendo and not juego_terminado:
+		perder_vida()

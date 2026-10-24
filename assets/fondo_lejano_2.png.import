@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b08n8fnvdnocy"
-path="res://.godot/imported/zombi.png-b526b456ec2778cbee492d976390d1cb.ctex"
+uid="uid://xekkcdgdu6rq"
+path="res://.godot/imported/fondo_lejano_2.png-00d4d7f595465445b3557597d229c4a9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/zombi.png"
-dest_files=["res://.godot/imported/zombi.png-b526b456ec2778cbee492d976390d1cb.ctex"]
+source_file="res://assets/fondo_lejano_2.png"
+dest_files=["res://.godot/imported/fondo_lejano_2.png-00d4d7f595465445b3557597d229c4a9.ctex"]
 
 [params]
 

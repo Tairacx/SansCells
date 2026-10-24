@@ -27,6 +27,7 @@ var tiempo_embestida = 0.0
 var tiempo_aviso = 0.0
 
 @onready var contacto = $Contacto
+@onready var sprite = $AnimatedSprite2D
 
 
 func _ready():
@@ -37,6 +38,8 @@ func _ready():
 func _physics_process(delta):
 	if muerto:
 		return
+
+	sprite.flip_h = direccion < 0   # el dibujo mira a la derecha
 
 	if not is_on_floor():
 		velocity.y += gravedad * delta
@@ -58,6 +61,10 @@ func _physics_process(delta):
 		perseguir(delta, jugador)
 	else:
 		patrullar()
+
+	# no se tira por los bordes ni por los fosos
+	if is_on_floor() and velocity.x != 0.0 and hay_borde(signf(velocity.x)):
+		velocity.x = 0.0
 
 	move_and_slide()
 
@@ -91,7 +98,17 @@ func _tiene_linea_de_vision(jugador):
 
 
 func patrullar():
+	if is_on_floor() and hay_borde(direccion):
+		direccion *= -1
 	velocity.x = speed * direccion
+
+
+# true si no hay suelo justo adelante (dir = 1 derecha, -1 izquierda)
+func hay_borde(dir) -> bool:
+	var espacio = get_world_2d().direct_space_state
+	var desde = global_position + Vector2(dir * 20.0, 20.0)
+	var consulta = PhysicsRayQueryParameters2D.create(desde, desde + Vector2(0, 40.0), 1, [get_rid()])
+	return espacio.intersect_ray(consulta).is_empty()
 
 
 func perseguir(delta, jugador):

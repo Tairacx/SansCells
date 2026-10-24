@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://doadakbpyeck4" path="res://mundo.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://b423vww716d4u" path="res://jugador.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://bshid1vk7ekt5" path="res://assets/fondo_lejano.png" id="3_otwa2"]
+[ext_resource type="Texture2D" path="res://assets/fondo_lejano_2.png" id="5_lej2"]
+[ext_resource type="Texture2D" path="res://assets/fondo_cerca_2.png" id="6_cer2"]
 [ext_resource type="Texture2D" uid="uid://doxdljs7rd4bv" path="res://assets/fondo_cerca.png" id="4_aou4a"]
 
 [node name="Mundo" type="Node2D" unique_id=457723268]
@@ -39,22 +41,46 @@ offset_bottom = 100.0
 theme_override_font_sizes/font_size = 36
 
 [node name="FondoLejano" type="Parallax2D" parent="." unique_id=557498494]
-z_index = -10
+z_index = -12
 scroll_scale = Vector2(0.2, 0.2)
 repeat_size = Vector2(1024, 0)
+repeat_times = 3
 
 [node name="Cielo" type="Sprite2D" parent="FondoLejano" unique_id=1359943264]
 position = Vector2(512, 320)
 texture = ExtResource("3_otwa2")
 
 [node name="FondoCerca" type="Parallax2D" parent="." unique_id=975633145]
-z_index = -9
+z_index = -10
 scroll_scale = Vector2(0.5, 0.5)
 repeat_size = Vector2(1024, 0)
+repeat_times = 3
 
 [node name="Columnas" type="Sprite2D" parent="FondoCerca" unique_id=1856242290]
 position = Vector2(512, 480)
 texture = ExtResource("4_aou4a")
+
+[node name="FondoLejano2" type="Parallax2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+z_index = -11
+scroll_scale = Vector2(0.2, 0.2)
+repeat_size = Vector2(1024, 0)
+repeat_times = 3
+
+[node name="Cielo" type="Sprite2D" parent="FondoLejano2"]
+position = Vector2(512, 320)
+texture = ExtResource("5_lej2")
+
+[node name="FondoCerca2" type="Parallax2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+z_index = -9
+scroll_scale = Vector2(0.5, 0.5)
+repeat_size = Vector2(1024, 0)
+repeat_times = 3
+
+[node name="Columnas" type="Sprite2D" parent="FondoCerca2"]
+position = Vector2(512, 480)
+texture = ExtResource("6_cer2")
 
 [node name="TimerPoder" type="Timer" parent="."]
 wait_time = 8.0

@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/esqueleto_hoja.png" id="t0"]
+[ext_resource type="Script" path="res://zombi.gd" id="s"]
+
+[sub_resource type="AtlasTexture" id="F0"]
+atlas = ExtResource("t0")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="F1"]
+atlas = ExtResource("t0")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="F2"]
+atlas = ExtResource("t0")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="F3"]
+atlas = ExtResource("t0")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("F0")
+},
+{
+"duration": 1.0,
+"texture": SubResource("F1")
+},
+{
+"duration": 1.0,
+"texture": SubResource("F2")
+},
+{
+"duration": 1.0,
+"texture": SubResource("F3")
+}],
+"loop": true,
+"name": &"quieto",
+"speed": 4.0
+}]
+
+[sub_resource type="RectangleShape2D" id="Forma"]
+size = Vector2(24, 56)
+
+[sub_resource type="RectangleShape2D" id="FormaContacto"]
+size = Vector2(36, 60)
+
+[node name="Esqueleto" type="CharacterBody2D" groups=["enemigos"]]
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -3.5)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("Frames")
+animation = &"quieto"
+autoplay = "quieto"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Forma")
+
+[node name="Contacto" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Contacto"]
+shape = SubResource("FormaContacto")

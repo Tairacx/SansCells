@@ -1,12 +1,12 @@
 [gd_scene format=3]
 
 [ext_resource type="Texture2D" path="res://assets/pergamino.png" id="1"]
-[ext_resource type="Script" path="res://celula.gd" id="2"]
+[ext_resource type="Script" path="res://moneda.gd" id="2"]
 
 [sub_resource type="CircleShape2D" id="Forma"]
 radius = 16
 
-[node name="Pergamino" type="Area2D" groups=["celulas"]]
+[node name="Pergamino" type="Area2D" groups=["monedas"]]
 script = ExtResource("2")
 valor = 10
 da_poder = true
